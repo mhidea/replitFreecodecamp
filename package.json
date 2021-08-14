@@ -1,0 +1,29 @@
+{
+  "name": "replitfreecodecamp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhidea/replitFreecodecamp.git"
+  },
+  "author": "Mohammadhassan Haghighifard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mhidea/replitFreecodecamp/issues"
+  },
+  "homepage": "https://github.com/mhidea/replitFreecodecamp#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.0",
+    "mongoose": "^5.13.7",
+    "require-dir": "^1.2.0"
+  }
+}

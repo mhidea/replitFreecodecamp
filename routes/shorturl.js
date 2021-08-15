@@ -22,17 +22,17 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
             }
         });
     } else {
-        let url = isValidURL(req.body.url)
+        let url = isValidURL(req.body.URL)
         dns.lookup(url, function (err, address, family) {
             if (err) {
                 return res.json({ error: 'invalid url' })
             }
             else {
                 console.log('dns ok.');
-                urlModel.findOne({ url: req.body.url }, function (err1, doc) {
+                urlModel.findOne({ url: req.body.URL }, function (err1, doc) {
                     if (err1 || !doc) {
                         console.log('model not found');
-                        urlModel.create({ url: req.body.url }, function (err2, model) {
+                        urlModel.create({ url: req.body.URL }, function (err2, model) {
                             if (err2) {
                                 console.log('model not saved');
                             } else {
@@ -40,7 +40,7 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
                             }
                         });
                     } else {
-                        return res.json({ original_url: req.body.url, short_url: doc._id })
+                        return res.json({ original_url: req.body.URL, short_url: doc._id })
                     }
                 });
             }

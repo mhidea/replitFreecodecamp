@@ -6,13 +6,13 @@ function isValidURL(string) {
     let ree = /(http[s]?:\/\/)([^\/]+)([^?]*)(\/\?.*)/g.exec(string)
     console.log(ree);
     if (!ree) {
-        return ['', '', '']
+        return false
 
     }
     if (ree.length > 2) {
         return ree
     }
-    return ['', '', '']
+    return false
 };
 
 app.get("/api/shorturl/:shorturl", function (req, res) {
@@ -32,30 +32,36 @@ app.post("/api/shorturl", function (req, res) {
     console.log("IN POST: " + req.body.url);
 
     let url = isValidURL(req.body.url)
-    dns.lookup(url[2], function (err, address, family) {
-        if (err) {
-            console.log('dns NOT ok!');
-            return res.json({ error: 'invalid url' })
-        }
-        else {
-            console.log('dns ok.');
-            let mainUrl = url[1] + url[2] + (url[3] ? url[3] : '')
-            urlModel.findOne({ url: mainUrl }, function (err1, doc) {
-                if (err1 || !doc) {
-                    console.log('model not found');
-                    urlModel.create({ url: mainUrl }, function (err2, model) {
-                        if (err2) {
-                            console.log('model not saved');
-                        } else {
-                            return res.json({ original_url: req.body.url, short_url: model._id })
-                        }
-                    });
-                } else {
-                    return res.json({ original_url: req.body.url, short_url: doc._id })
-                }
-            });
-        }
-    })
+    if (url) {
+        dns.lookup(url[2], function (err, address, family) {
+            if (err) {
+                console.log('dns NOT ok!');
+                return res.json({ error: 'invalid url' })
+            }
+            else {
+                console.log('dns ok.');
+                let mainUrl = url[1] + url[2] + (url[3] ? url[3] : '')
+                urlModel.findOne({ url: mainUrl }, function (err1, doc) {
+                    if (err1 || !doc) {
+                        console.log('model not found');
+                        urlModel.create({ url: mainUrl }, function (err2, model) {
+                            if (err2) {
+                                console.log('model not saved');
+                            } else {
+                                return res.json({ original_url: req.body.url, short_url: model._id })
+                            }
+                        });
+                    } else {
+                        return res.json({ original_url: req.body.url, short_url: doc._id })
+                    }
+                });
+            }
+        })
+    } else {
+        return res.json({ error: 'invalid url' })
+
+    }
+
 
 
 

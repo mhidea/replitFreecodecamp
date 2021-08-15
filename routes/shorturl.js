@@ -20,7 +20,7 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
             if (err || !doc) {
                 return res.json({ error: 'invalid url' })
             } else {
-                res.redirect("http://" + doc.url)
+                res.redirect(doc.url)
             }
         });
     } else {

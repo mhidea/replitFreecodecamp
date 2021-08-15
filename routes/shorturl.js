@@ -5,7 +5,7 @@ const dns = require('dns')
 function isValidURL(string) {
     let ree = /(http[s]?:\/\/)(w{3}\.)?([^w{3}.]+)(\.\w+)(\/.*)?/g.exec(string)
     console.log(ree);
-    console.log(ree[2] + ree[3] + ree[4]);
+    console.log(ree[2] ?? "" + ree[3] + ree[4]);
     if (ree.length > 4) {
         return ree[2] + ree[3] + ree[4]
     }

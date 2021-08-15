@@ -23,22 +23,22 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
             }
         });
     } else {
-        if (validURL(req.body.URL)) {
-            dns.lookup(req.body.URL, function (err, address, family) {
+        if (validURL(req.body.url)) {
+            dns.lookup(req.body.url, function (err, address, family) {
                 if (err) {
                     return res.json({ error: 'invalid url' })
                 } else {
-                    urlModel.findOne({ url: req.body.URL }, function (err, doc) {
+                    urlModel.findOne({ url: req.body.url }, function (err, doc) {
                         if (err || !doc) {
-                            urlModel.create({ url: req.body.URL }, function (err, model) {
+                            urlModel.create({ url: req.body.url }, function (err, model) {
                                 if (err) {
                                     console.log('model not saved');
                                 } else {
-                                    return res.json({ original_url: req.body.URL, short_url: model._id })
+                                    return res.json({ original_url: req.body.url, short_url: model._id })
                                 }
                             });
                         } else {
-                            return res.json({ original_url: req.body.URL, short_url: doc._id })
+                            return res.json({ original_url: req.body.url, short_url: doc._id })
                         }
                     });
                 }

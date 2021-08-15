@@ -4,8 +4,6 @@ const dns = require('dns')
 
 function isValidURL(string) {
     let ree = /(http[s]?:\/\/)([^\/]+)(\/.*)?/g.exec(string)
-    console.log(ree);
-    console.log(ree[2]);
     if (ree.length > 2) {
         return ree[2]
     }
@@ -13,6 +11,7 @@ function isValidURL(string) {
 };
 
 app.get("/api/shorturl/:shorturl", function (req, res) {
+    console.log("IN GET: " + req.params.shorturl);
     if (req.params.shorturl != undefined) {
         urlModel.findOne({ _id: req.params.shorturl }, function (err, doc) {
             if (err || !doc) {
@@ -25,6 +24,8 @@ app.get("/api/shorturl/:shorturl", function (req, res) {
 }
 )
 app.post("/api/shorturl", function (req, res) {
+    console.log("IN POST: " + req.body.url);
+
     let url = isValidURL(req.body.url)
     dns.lookup(url, function (err, address, family) {
         if (err) {

@@ -2,6 +2,13 @@ const { app } = require('../app')
 const { urlModel } = require('../db')
 const dns = require('dns')
 
+function isValidURL(string) {
+    let ree = /(http[s]?:\/\/)(w{3}\.)?([^w{3}.]+)(\.\w+)(\/.*)?/g.exec(string)
+    if (ree.length > 4) {
+        return ree[2] + ree[3] + ree[4]
+    }
+    return ""
+};
 
 
 
@@ -15,19 +22,17 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
             }
         });
     } else {
-        let url = req.body.url
-        url = url.replace("https://", "")
-        url = url.replace("http://", "")
+        let url = isValidURL(req.body.url)
         dns.lookup(url, function (err, address, family) {
             if (err) {
                 return res.json({ error: 'invalid url' })
             }
             else {
                 console.log('dns ok.');
-                urlModel.findOne({ url: url }, function (err1, doc) {
+                urlModel.findOne({ url: req.body.url }, function (err1, doc) {
                     if (err1 || !doc) {
                         console.log('model not found');
-                        urlModel.create({ url: url }, function (err2, model) {
+                        urlModel.create({ url: req.body.url }, function (err2, model) {
                             if (err2) {
                                 console.log('model not saved');
                             } else {
@@ -35,7 +40,7 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
                             }
                         });
                     } else {
-                        return res.json({ original_url: url, short_url: doc._id })
+                        return res.json({ original_url: req.body.url, short_url: doc._id })
                     }
                 });
             }

@@ -3,11 +3,12 @@ const { urlModel } = require('../db')
 const dns = require('dns')
 
 function isValidURL(string) {
-    let ree = /(http[s]?:\/\/)([^\/]+)(\/.*)?/g.exec(string)
+    let ree = /(http[s]?:\/\/)([^\/]+)([^?]*)(\/\?.*)/g.exec(string)
+    console.log(ree);
     if (ree.length > 2) {
-        return ree[2]
+        return ree
     }
-    return ""
+    return ['', '', '']
 };
 
 app.get("/api/shorturl/:shorturl", function (req, res) {
@@ -27,21 +28,22 @@ app.post("/api/shorturl", function (req, res) {
     console.log("IN POST: " + req.body.url);
 
     let url = isValidURL(req.body.url)
-    dns.lookup(url, function (err, address, family) {
+    dns.lookup(url[2], function (err, address, family) {
         if (err) {
             console.log('dns NOT ok!');
             return res.json({ error: 'invalid url' })
         }
         else {
             console.log('dns ok.');
-            urlModel.findOne({ url: req.body.url }, function (err1, doc) {
+            let mainUrl = url[1] + url[2] + (url[3] ? url[3] : '')
+            urlModel.findOne({ url: mainUrl }, function (err1, doc) {
                 if (err1 || !doc) {
                     console.log('model not found');
-                    urlModel.create({ url: req.body.url }, function (err2, model) {
+                    urlModel.create({ url: mainUrl }, function (err2, model) {
                         if (err2) {
                             console.log('model not saved');
                         } else {
-                            return res.json({ original_url: url, short_url: model._id })
+                            return res.json({ original_url: req.body.url, short_url: model._id })
                         }
                     });
                 } else {

@@ -2,15 +2,7 @@ const { app } = require('../app')
 const { urlModel } = require('../db')
 const dns = require('dns')
 
-function validURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-    return !!pattern.test(str);
-}
+
 
 
 app.post("/api/shorturl/:shorturl?", function (req, res) {
@@ -19,33 +11,35 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
             if (err || !doc) {
                 return res.json({ error: 'invalid url' })
             } else {
-                res.redirect(doc.url)
+                res.redirect("http://" + doc.url)
             }
         });
     } else {
-        if (validURL(req.body.url)) {
-            dns.lookup(req.body.url, function (err, address, family) {
-                if (err) {
-                    return res.json({ error: 'invalid url' })
-                } else {
-                    urlModel.findOne({ url: req.body.url }, function (err, doc) {
-                        if (err || !doc) {
-                            urlModel.create({ url: req.body.url }, function (err, model) {
-                                if (err) {
-                                    console.log('model not saved');
-                                } else {
-                                    return res.json({ original_url: req.body.url, short_url: model._id })
-                                }
-                            });
-                        } else {
-                            return res.json({ original_url: req.body.url, short_url: doc._id })
-                        }
-                    });
-                }
-            })
-        } else {
-            return res.json({ error: 'invalid url' })
-        }
+        let url = req.body.url
+        url = url.replace("https://", "")
+        url = url.replace("http://", "")
+        dns.lookup(url, function (err, address, family) {
+            if (err) {
+                return res.json({ error: 'invalid url' })
+            }
+            else {
+                console.log('dns ok.');
+                urlModel.findOne({ url: url }, function (err1, doc) {
+                    if (err1 || !doc) {
+                        console.log('model not found');
+                        urlModel.create({ url: url }, function (err2, model) {
+                            if (err2) {
+                                console.log('model not saved');
+                            } else {
+                                return res.json({ original_url: url, short_url: model._id })
+                            }
+                        });
+                    } else {
+                        return res.json({ original_url: url, short_url: doc._id })
+                    }
+                });
+            }
+        })
     }
 
 

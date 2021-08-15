@@ -5,6 +5,7 @@ const dns = require('dns')
 function isValidURL(string) {
     let ree = /(http[s]?:\/\/)(w{3}\.)?([^w{3}.]+)(\.\w+)(\/.*)?/g.exec(string)
     console.log(ree);
+    console.log(ree[2] + ree[3] + ree[4]);
     if (ree.length > 4) {
         return ree[2] + ree[3] + ree[4]
     }
@@ -26,6 +27,7 @@ app.post("/api/shorturl/:shorturl?", function (req, res) {
         let url = isValidURL(req.body.URL)
         dns.lookup(url, function (err, address, family) {
             if (err) {
+                console.log('dns NOT ok!');
                 return res.json({ error: 'invalid url' })
             }
             else {

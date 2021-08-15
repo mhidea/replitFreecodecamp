@@ -13,7 +13,9 @@ var connection = mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopolo
 });
 
 
-autoIncrement.initialize(mongoose);
+autoIncrement.initialize(mongoose, {
+    startAt: 1
+});
 
 const { Schema } = mongoose;
 //url model

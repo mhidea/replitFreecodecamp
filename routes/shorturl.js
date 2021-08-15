@@ -4,15 +4,11 @@ const dns = require('dns')
 
 function isValidURL(string) {
     let ree = /(http[s]?:\/\/)([^\/]+)([^?]*)(\/\?.*)/g.exec(string)
-    console.log(ree);
     if (!ree) {
         return false
+    }
+    return ree
 
-    }
-    if (ree.length > 2) {
-        return ree
-    }
-    return false
 };
 
 app.get("/api/shorturl/:shorturl", function (req, res) {
@@ -58,6 +54,7 @@ app.post("/api/shorturl", function (req, res) {
             }
         })
     } else {
+        console.log('bad url!');
         return res.json({ error: 'invalid url' })
 
     }

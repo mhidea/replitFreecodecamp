@@ -37,10 +37,10 @@ app.post("/api/shorturl", function (req, res) {
             else {
                 console.log('dns ok.');
                 let mainUrl = url[1] + url[2] + (url[3] ? url[3] : '')
-                urlModel.findOne({ url: mainUrl }, function (err1, doc) {
+                urlModel.findOne({ url: req.body.url }, function (err1, doc) {
                     if (err1 || !doc) {
                         console.log('model not found');
-                        urlModel.create({ url: mainUrl }, function (err2, model) {
+                        urlModel.create({ url: req.body.url }, function (err2, model) {
                             if (err2) {
                                 console.log('model not saved');
                             } else {

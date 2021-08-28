@@ -3,12 +3,12 @@ const { urlModel } = require('../db')
 const dns = require('dns')
 
 function isValidURL(string) {
-    let ree = /([\w]+:\/\/)([^\/]+)(\/[^\?]*[\w\d])?(\/?.*)?/g.test(string)
+    let ree = /([\w]+:\/\/)([^\/]+)(\/[^\?]*[\w\d])?(\/?.*)?/g.exec(string)
+    console.log("ree: ", ree);
     if (!ree) {
         return false
     }
     return ree
-
 };
 
 app.get("/api/shorturl/:shorturl", function (req, res) {
@@ -54,7 +54,7 @@ app.post("/api/shorturl", function (req, res) {
             }
         })
     } else {
-        console.log('bad url!');
+        console.log('invalid url!');
         return res.json({ error: 'invalid url' })
 
     }

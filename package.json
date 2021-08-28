@@ -23,6 +23,7 @@
     "express": "^4.17.1",
     "mongodb": "^4.1.0",
     "mongoose": "^5.13.7",
+    "cors": "^2.8.5",
     "mongoose-auto-increment": "^5.0.1",
     "require-dir": "^1.2.0"
   },

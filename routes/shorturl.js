@@ -3,7 +3,7 @@ const { urlModel } = require('../db')
 const dns = require('dns')
 
 function isValidURL(string) {
-    let ree = /([\w]+:\/\/)([^\/]+)(\/[^\?]*[\w\d])?(\/?.*)?/g.exec(string)
+    let ree = /([\w]+:\/\/)([^\/]+)(\/[^\?]*[\w\d])?(\/?.*)?/g.test(string)
     if (!ree) {
         return false
     }

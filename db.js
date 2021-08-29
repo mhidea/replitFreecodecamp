@@ -27,20 +27,16 @@ urlSchema.plugin(autoIncrement.plugin, 'url');
 const urlModel = mongoose.model('url', urlSchema);
 exports.urlModel = urlModel
 
-
-
-const userSchema = new Schema({
-    username: String
-});
-// userSchema.plugin(autoIncrement.plugin, 'user');
-const userModel = mongoose.model('user', userSchema);
-exports.userModel = userModel
-
-
 const userLogSchema = new Schema({
     description: String,
     duration: String,
     date: { type: Date, default: Date.now },
 });
-const userLogModel = mongoose.model('user_log', userLogSchema);
-exports.userLogModel = userLogModel
+
+const userSchema = new Schema({
+    username: String,
+    log: [userLogSchema]
+});
+// userSchema.plugin(autoIncrement.plugin, 'user');
+const userModel = mongoose.model('user', userSchema);
+exports.userModel = userModel

@@ -6,3 +6,5 @@ let obj = {
 }
 console.log(Object.entries(obj));
 console.log(Object.values(obj));
+
+if (2 < Infinity) console.log("yes");

@@ -45,7 +45,6 @@ app.post('/api/users/:id/exercises', function (req, res) {
             let user = { "_id": doc._id, username: doc.username }
             doc.save().then(result => {
                 let last = result.log.pop()
-                console.log("last", last);
                 return res.json({ ...user, date: last.date.toDateString(), duration: last.duration, description: last.description })
             });
         }
@@ -57,8 +56,26 @@ app.get('/api/users/:id/logs', function (req, res) {
             return res.send("ERROR");
         }
         else {
+            let logs = []
+            if (req.query.to || req.query.from || req.query.limit) {
+                let limit = req.query.limit
+                let low = req.query.from ? (new Date(req.query.from)).getTime() : 0
+                let high = req.query.to ? (new Date(req.query.to)).getTime() : Infinity
+                logs = doc.log.filter(el => {
+                    if (limit <= 0) {
+                        return false
+                    }
+                    limit--
+                    let elDate = (new Date(el.date)).getTime()
+                    return (elDate > low && elDate < high)
+                })
+            } else (
+                logs = doc.log
+            )
             return res.json({
-                "_id": doc._id, username: doc.username, count: doc.log.length, log: doc.log.map(el => {
+                "_id": doc._id, username: doc.username,
+                count: logs.length,
+                log: logs.map(el => {
                     return { date: el.date.toDateString(), duration: el.duration, description: el.description }
                 })
             });

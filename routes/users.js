@@ -57,7 +57,11 @@ app.get('/api/users/:id/logs', function (req, res) {
             return res.send("ERROR");
         }
         else {
-            return res.json({ "_id": doc._id, username: doc.username, count: doc.log.length, log: doc.log });
+            return res.json({
+                "_id": doc._id, username: doc.username, count: doc.log.length, log: doc.log.map(el => {
+                    return { date: el.date.toDateString(), duration: el.duration, description: el.description }
+                })
+            });
         }
     });
 })

@@ -32,32 +32,31 @@ app.post('/api/users', function (req, res) {
     });
 })
 app.post('/api/users/:id/exercises', function (req, res) {
+    console.log(req.body);
     if (!req.body.description || !req.body.duration) {
         return res.send("Requires not provided");
     }
     userModel.findOne({ _id: req.params.id }, function (err1, doc) {
         if (err1 || !doc) {
-            return res.send("ERROR");
+            return res.send("ERROR MODEL NOT FOUND");
         }
         else {
             doc.log.push({ ...req.body })
-            console.log(doc);
+            let user = { "-id": doc._id, username: doc.username }
             doc.save().then(result => {
-                return res.json(result)
-
+                let last = result.log.pop()
+                return res.json({ ...user, duration: last.duration, description: last.description, date: last.date })
             });
         }
     });
 })
-
 app.get('/api/users/:id/logs', function (req, res) {
     userModel.findOne({ _id: req.params.id }, function (err1, doc) {
         if (err1 || !doc) {
             return res.send("ERROR");
         }
         else {
-
-            return res.json({ _id: doc._id, username: doc.username, log: doc.log, count: doc.log.length })
+            return res.json({ "_id": doc._id, username: doc.username, count: doc.log.length, log: doc.log });
         }
     });
 })

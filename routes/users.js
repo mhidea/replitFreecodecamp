@@ -1,3 +1,4 @@
+const { now } = require('mongoose');
 const { app } = require('../app')
 const { userModel } = require('../db')
 
@@ -45,7 +46,7 @@ app.post('/api/users/:id/exercises', function (req, res) {
             doc.save().then(result => {
                 let last = result.log.pop()
                 console.log("last", last);
-                return res.json({ ...user, date: last.date, duration: last.duration, description: last.description })
+                return res.json({ ...user, date: last.date.toDateString(), duration: last.duration, description: last.description })
             });
         }
     });

@@ -42,7 +42,7 @@ app.post('/api/users/:id/exercises', function (req, res) {
         }
         else {
             doc.log.push({ ...req.body })
-            let user = { "-id": doc._id, username: doc.username }
+            let user = { "_id": doc._id, username: doc.username }
             doc.save().then(result => {
                 let last = result.log.pop()
                 console.log("last", last);

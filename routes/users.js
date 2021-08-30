@@ -32,7 +32,6 @@ app.post('/api/users', function (req, res) {
     });
 })
 app.post('/api/users/:id/exercises', function (req, res) {
-    console.log(req.body);
     if (!req.body.description || !req.body.duration) {
         return res.send("Requires not provided");
     }
@@ -45,7 +44,8 @@ app.post('/api/users/:id/exercises', function (req, res) {
             let user = { "-id": doc._id, username: doc.username }
             doc.save().then(result => {
                 let last = result.log.pop()
-                return res.json({ ...user, duration: last.duration, description: last.description, date: last.date })
+                console.log("last", last);
+                return res.json({ ...user, date: last.date, duration: last.duration, description: last.description })
             });
         }
     });

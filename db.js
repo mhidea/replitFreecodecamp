@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 var autoIncrement = require('mongoose-auto-increment');
 
 
-const uri = `mongodb+srv://${process.env['DB_USER']}:${process.env['DB_PASSWORD']}@cluster0.mqfkn.mongodb.net/urlDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env['DB_USER']}:${process.env['DB_PASSWORD']}@cluster0.mipgo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
 
 var connection = mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }).then(e => {
     console.log('db connected');
@@ -29,7 +29,7 @@ exports.urlModel = urlModel
 
 const userLogSchema = new Schema({
     description: String,
-    duration: String,
+    duration: Number,
     date: { type: Date, default: Date.now },
 });
 
